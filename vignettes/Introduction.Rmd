@@ -132,7 +132,7 @@ We see that the scRNA-seq and scATAC-seq cells are properly mixed in the latent 
 Note that by setting the parameters `nfeatures` and `initial_variable_features_num` equal, 
 we can obtain features selected from standard variable feature selection without considering CLIC scores:
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, out.width="80%"}
 load("data/BMMC-s4d8.Rdata")
 rna <- NormalizeData(rna)
 # choose 2000 variable features
