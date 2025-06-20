@@ -123,7 +123,7 @@ p <- DimPlot(coembed, group.by = c("orig.ident"))
 ```{r, include=FALSE, eval=FALSE}
 ggsave("data/coembed_filtered.jpeg")
 ```
-```{r, echo=FALSE, out.width="400px", fig.align="center"}
+```{r, echo=FALSE, out.width="500px"}
 knitr::include_graphics(system.file("extdata", "coembed_filtered.jpeg", package="CLIC"))
 ```
 
