@@ -123,7 +123,7 @@ p <- DimPlot(coembed, group.by = c("orig.ident"))
 ```{r, include=FALSE, eval=FALSE}
 ggsave("data/coembed_filtered.jpeg")
 ```
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="60%"}
 knitr::include_graphics(system.file("extdata", "coembed_filtered.jpeg", package="CLIC"))
 ```
 
@@ -132,7 +132,7 @@ We see that the scRNA-seq and scATAC-seq cells are properly mixed in the latent 
 Note that by setting the parameters `nfeatures` and `initial_variable_features_num` equal, 
 we can obtain features selected from standard variable feature selection without considering CLIC scores:
 
-```{r, eval=FALSE, out.width="80%"}
+```{r, eval=FALSE}
 load("data/BMMC-s4d8.Rdata")
 rna <- NormalizeData(rna)
 # choose 2000 variable features
