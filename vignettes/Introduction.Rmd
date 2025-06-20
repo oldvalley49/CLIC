@@ -1,11 +1,15 @@
 ---
-title: "Introduction to CLIC package"
-output: rmarkdown::html_vignette
+title: "Introduction to the CLIC Package"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{Introduction to CLIC package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -14,7 +18,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Overview
+---
+
+## Overview
 
 The **CLIC** package provides the tool for feature selection in the context of integrating unpaired scRNA-seq and scATAC-seq data. 
 Unlike traditional feature selection methods that measure solely the gene's expression variability, CLIC prioritizes genes that show 
@@ -26,27 +32,37 @@ The script used for computing CLIC scores is available [here](https://github.com
 For more details, please refer to our paper describing the method. 
 PREPRINT LINK PENDING
 
-# Installation
+---
+
+## Installation
 
 To install the most up-to-date version of CLIC, please install the software via GitHub repo: 
 ```{r setup, eval=FALSE}
 devtools::install_github("oldvalley49/CLIC")
 ```
 
-# Usage
+---
+
+## Usage
 
 The main function, `FindCLICFeatures()` accepts scRNA-seq data in either:
+
 - A **Seurat object** (recommended)
-- A gene expression matrix (raw counts or normalized data)
-For matrix input, the user must also specify the type (raw counts or normalized data) via the `input_matrix_type` parameter (`counts` or `data`). 
-The matrix will then be internally converted into a Seurat object and perform normalization via `Seurat::NormalizeData()` if necessary. 
+- A gene expression matrix (raw counts data)
+
 The user must also provide a species name to the `species` parameter, which loads the corresponding CLIC score file (e.g., `human.csv`) from the package's `inst/extdata/` folder. 
 
-# Example
+---
+
+## Example: Human BMMC Data
+
 For convenience, the processed data for [human BMMC](https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/158f3069a435b314a80bdcb024f8e422-Paper-round2.pdf) is available 
-for download [here](https://www.dropbox.com/scl/fi/kf6jpe6wpa4zm7eethbjc/BMMC-s4d8.Rdata?rlkey=vctrspsnerfeliatsu40w4rh7&st=e2ad0lty&dl=0) in .RData format. 
+for download [here](https://www.dropbox.com/scl/fi/kf6jpe6wpa4zm7eethbjc/BMMC-s4d8.Rdata?rlkey=vctrspsnerfeliatsu40w4rh7&st=e2ad0lty&dl=0) in .Rdata format. 
+
 It is worth noting that this data is originally a **multiome** data, meaning both modalities were simultaneously sampled. This is **not** the setting in which CLIC would be used in a realistic scenario. 
-Users should apply CLIC to integrate separately sampled scRNA-seq and scATAC-seq data. Here, we treat the two modalities as originating from different experiments for demonstration
+Users should apply CLIC to integrate separately sampled scRNA-seq and scATAC-seq data. 
+
+Here, we treat the two modalities as originating from different experiments for demonstration
 and evaluation purposes only. We load the RNA and ATAC data separately, pretending that we don't know their ground-truth pairing information. 
 
 We demonstrate how CLIC can be integrated into the Seurat workflow. However, CLIC is effective for any integration framework that aligns gene and scATAC-seq peaks 
@@ -54,7 +70,9 @@ via the proximity assumption.
 
 First, load the scRNA-seq data and scATAC-seq data. Gene activity scores are pre-computed by 
 summing the number of fragments overlapping the gene and its promoter region. 
-We can follow the standard Seurat preprocessing pipeline and in the process, find the 
+
+
+We can follow the [standard Seurat preprocessing pipeline](https://satijalab.org/seurat/articles/seurat5_atacseq_integration_vignette) and in the process, find the 
 CLIC features to use for integration. 
 ```{r, eval=FALSE}
 library(CLIC)
@@ -70,7 +88,7 @@ out <- FindCLICFeatures(rna, species='human')
 use_features <- out$use_features
 head(use_features)
 rna <- ScaleData(rna)
-# rna <- RunPCA(rna)
+rna <- RunPCA(rna)
 
 # ATAC preprocessing
 atac <- RunTFIDF(atac)
@@ -105,7 +123,9 @@ p <- DimPlot(coembed, group.by = c("orig.ident"))
 ```{r, include=FALSE, eval=FALSE}
 ggsave("data/coembed_filtered.jpeg")
 ```
-![UMAP of the coembedding](vignettes/coembed_filtered.jpeg)
+```{r, echo=FALSE}
+knitr::include_graphics(system.file("extdata", "coembed_filtered.jpeg", package="CLIC"))
+```
 
 We see that the scRNA-seq and scATAC-seq cells are properly mixed in the latent space.
 
@@ -147,11 +167,16 @@ embedding_default <- Embeddings(coembed, reduction = "pca")
 ```
 
 A standard metric for evaluating benchmark performance when we have ground-truth pairing information is "Fraction of Samples Closer than the True Match" (FOSCTTM).
+
+---
+
 Let $N$ be the number of cells in each modality and $x$ and $y$ represent the coordinates of cells originating from scRNA-seq and scATAC-seq, respectively. Then, FOSCTTM is
 $$
 FOSCTTM = \frac{1}{N}\left(\sum_{i=1}^N\frac{n_{1, i}}{N}+\sum_{i=1}^{N}\frac{n_{2, i}}{N}\right)
 $$
 where $n_{1, i}$ and $n_{2, i}$ are the number of cells from the other omics that were closer to the cell than the paired cell in the coembedded space. 
+
+---
 
 We use the following function to compute FOSCTTM:
 ```{r, eval=FALSE}
@@ -179,9 +204,19 @@ foscttm_default <- foscttm(
   embedding_default[(ncol(rna) + 1):(2 * ncol(rna)), ]
 )
 ```
-FOSCTTM score with CLIC features is: 0.1020491
-FOSCTTM score with variable features is: 0.1069326
-where lower value is better. 
 
-For a more comprehensive benchmark with more datasets, metrics and scenarios, please refer to our paper:
--PREPRINT LINK PENDING-
+| Method                  | FOSCTTM Score |
+|-------------------------|---------------|
+| CLIC Features           | 0.1020491     |
+| Standard Variable       | 0.1069326     |
+
+Lower is better — CLIC provides improved cross-modal alignment.
+
+---
+
+## Further Reading
+
+For a more comprehensive benchmark as well as description of method, please see our paper:  
+PREPRINT LINK PENDING
+
+---
