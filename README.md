@@ -1,6 +1,6 @@
 # CLIC
 
-[![Project Status](http://www.repostatus.org/badges/latest/active.svg)]
+![Project Status](http://www.repostatus.org/badges/latest/active.svg)
 
 ### Overview
 
@@ -11,8 +11,9 @@ high empirical correlation between expression and nearby accessibility as "high 
 **CLIC scores**, used as a feature's confidence score is computed using diverse single-cell multiome data from ENCODE.
 The script used for computing CLIC scores is available [here](https://github.com/oldvalley49/ENCODE_score)
 
-For more details, please refer to our paper describing the method. 
-PREPRINT LINK PENDING
+For more details, please refer to our paper describing the method.
+
+(Preprint link pending)
 
 ### Download
 
@@ -31,4 +32,4 @@ Please view the vigentte for instructions on how to use the package:
 (Pending)
 
 ### Contact
-Should you encounter any bugs or have any suggestions, please feel free to contact [Tomoya Furutani](tfuruta1@jh.edu) or open an issue on GitHub
+Should you encounter any bugs or have any suggestions, please feel free to contact Tomoya Furutani at tfuruta1@jh.edu or open an issue on GitHub
