@@ -20,7 +20,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
         remainder = var_genes[!(var_genes %in% CLIC_genes)]
         num_to_be_filled = n - length(result)
         result <- c(result, remainder[1:num_to_be_filled])
-        return(list(seurat_obj = object, use_features = result, clic_num=clic_num))
+        return(list(use_features = result, clic_num=clic_num))
       }
    }
    
@@ -51,7 +51,6 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #'
 #' @return A list containing:
 #' \describe{
-#'   \item{seurat_obj}{Seurat object containig gene expression data}
 #'   \item{use_features}{Character vector of selected features.}
 #'   \item{clic_num}{Integer indicating how many CLIC-ranked features were required to reach \code{nfeatures}. 
 #'    The intersection of the top \code{initial_variable_features_num} variable genes and the top \code{clic_num} 
