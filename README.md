@@ -31,5 +31,8 @@ Please view the vigentte for instructions on how to use the package:
 ### Citation
 (Pending)
 
+### License
+This software is licensed under the [MIT License](./LICENSE).
+
 ### Contact
 Should you encounter any bugs or have any suggestions, please feel free to contact Tomoya Furutani at tfuruta1@jh.edu or open an issue on GitHub
