@@ -27,7 +27,7 @@ Unlike traditional feature selection methods that measure solely the gene's expr
 high empirical correlation between expression and nearby accessibility as "high confidence links". 
 
 **CLIC scores**, used as a feature's confidence score is computed using diverse single-cell multiome data from ENCODE.
-The script used for computing CLIC scores is available [here](https://github.com/oldvalley49/ENCODE_score)
+The script used for computing CLIC scores is available [here](https://github.com/oldvalley49/CLIC_compute)
 
 For more details, please refer to our paper describing the method. 
 PREPRINT LINK PENDING
@@ -84,14 +84,18 @@ load("data/BMMC-s4d8.Rdata")
 
 # RNA preprocessing
 rna <- NormalizeData(rna)
-rna <- FindVariableFeatures(rna)
 out <- FindCLICFeatures(rna, species='human')
 use_features <- out$use_features
 head(use_features)
-
+rna <- ScaleData(rna, features=use_features)
 # ATAC preprocessing
+atac <- RunTFIDF(atac)
+atac <- FindTopFeatures(atac, min.cutoff = "q0")
+atac <- RunSVD(atac)
+
 DefaultAssay(atac) <- "ACTIVITY"
 atac <- NormalizeData(atac)
+atac <- ScaleData(atac, features = use_features)
 ```
 
 Using the features found above, we run standard Seurat workflow for integrating scRNA-seq and scATAC-seq data. 
