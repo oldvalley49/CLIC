@@ -84,20 +84,14 @@ load("data/BMMC-s4d8.Rdata")
 
 # RNA preprocessing
 rna <- NormalizeData(rna)
+rna <- FindVariableFeatures(rna)
 out <- FindCLICFeatures(rna, species='human')
 use_features <- out$use_features
 head(use_features)
-rna <- ScaleData(rna)
-rna <- RunPCA(rna)
 
 # ATAC preprocessing
-atac <- RunTFIDF(atac)
-atac <- FindTopFeatures(atac, min.cutoff = "q0")
-atac <- RunSVD(atac)
-
 DefaultAssay(atac) <- "ACTIVITY"
 atac <- NormalizeData(atac)
-atac <- ScaleData(atac, features = rownames(atac))
 ```
 
 Using the features found above, we run standard Seurat workflow for integrating scRNA-seq and scATAC-seq data. 
