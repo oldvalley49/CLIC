@@ -95,7 +95,7 @@ FindCLICFeatures <- function(object, species, nfeatures=2000, initial_variable_f
    # check parameters
 
    if (nfeatures > initial_variable_features_num) {
-      stop('`nfeatures` must be less than or equal to `initial_variable_features_num`')
+      warning('number of features in dataset were less than `initial_variable_features_num`')
    }
    
    scores_fp <- system.file('extdata', paste0(species,'.csv'), package='CLIC')
