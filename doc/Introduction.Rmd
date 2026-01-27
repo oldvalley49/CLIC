@@ -1,0 +1,135 @@
+---
+title: "Introduction to the CLIC Package"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{Introduction to the CLIC Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+---
+
+## Overview
+
+The **CLIC** package provides the tool for feature selection in the context of integrating unpaired scRNA-seq and scATAC-seq data. 
+Unlike traditional feature selection methods that measure solely the gene's expression variability, CLIC prioritizes genes that show 
+high empirical correlation between expression and nearby accessibility as "high confidence links". 
+
+**CLIC scores**, used as a feature's confidence score is computed using diverse single-cell multiome data from ENCODE.
+The script used for computing CLIC scores is available [here](https://github.com/oldvalley49/CLIC_compute)
+
+For more details, please refer to our paper describing the method. 
+PREPRINT LINK PENDING
+
+---
+
+## Installation
+
+To install the most up-to-date version of CLIC, please install the software via GitHub repo: 
+```{r setup, eval=FALSE}
+devtools::install_github("oldvalley49/CLIC")
+```
+
+---
+
+## Usage
+
+The main function, `FindCLICFeatures()` accepts scRNA-seq data in either:
+
+- A **Seurat object** (recommended)
+- A gene expression matrix (raw counts data)
+
+The user must also provide a species name to the `species` parameter, which loads the corresponding CLIC score file (e.g., `human.csv`) from the package's `inst/extdata/` folder. 
+
+---
+
+## Example: Human BMMC Data
+
+For convenience, the processed data for [human BMMC](https://datasets-benchmarks-proceedings.neurips.cc/paper/2021/file/158f3069a435b314a80bdcb024f8e422-Paper-round2.pdf) is available 
+for download [here](https://www.dropbox.com/scl/fi/kf6jpe6wpa4zm7eethbjc/BMMC-s4d8.Rdata?rlkey=vctrspsnerfeliatsu40w4rh7&st=e2ad0lty&dl=0) in .Rdata format. 
+
+It is worth noting that this data is originally a **multiome** data, meaning both modalities were simultaneously sampled. This is **not** the setting in which CLIC would be used in a realistic scenario. 
+Users should apply CLIC to integrate separately sampled scRNA-seq and scATAC-seq data. 
+
+Here, we treat the two modalities as originating from different experiments for demonstration
+and evaluation purposes only. We load the RNA and ATAC data separately, pretending that we don't know their ground-truth pairing information. 
+
+We demonstrate how CLIC can be integrated into the Seurat workflow. However, CLIC is effective for any integration framework that aligns gene and scATAC-seq peaks 
+via the proximity assumption. 
+
+First, load the scRNA-seq data and scATAC-seq data. Gene activity scores are pre-computed by 
+summing the number of fragments overlapping the gene and its promoter region. 
+
+
+We can follow the [standard Seurat preprocessing pipeline](https://satijalab.org/seurat/articles/seurat5_atacseq_integration_vignette) and in the process, find the 
+CLIC features to use for integration. 
+```{r, eval=FALSE}
+library(CLIC)
+library(Seurat)
+library(Signac)
+library(ggplot2)
+# replace with local path to data
+load("data/BMMC-s4d8.Rdata")
+
+# RNA preprocessing
+rna <- NormalizeData(rna)
+out <- FindCLICFeatures(rna, species='human-signac-pearson')
+use_features <- out$use_features
+head(use_features)
+rna <- ScaleData(rna, features=use_features)
+# ATAC preprocessing
+atac <- RunTFIDF(atac)
+atac <- FindTopFeatures(atac, min.cutoff = "q0")
+atac <- RunSVD(atac)
+
+DefaultAssay(atac) <- "ACTIVITY"
+atac <- NormalizeData(atac)
+atac <- ScaleData(atac, features = use_features)
+```
+
+Using the features found above, we run standard Seurat workflow for integrating scRNA-seq and scATAC-seq data. 
+```{r, eval=FALSE}
+# identify anchors for cca
+transfer.anchors <- FindTransferAnchors(reference=rna, query=atac, 
+                                        features=use_features,
+                                        reference.assay = "RNA",
+                                        query.assay = "ACTIVITY",
+                                        reduction = "cca")
+# coembed into shared latent space
+refdata <- GetAssayData(rna, assay = "RNA", slot = "data")
+imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata, weight.reduction = atac[["lsi"]],
+                            dims = 2:30)
+atac[["RNA"]] <- imputation
+coembed <- merge(x = rna, y = atac, add.cell.ids = c("RNA", "ATAC"))
+coembed <- ScaleData(coembed, features = use_features, do.scale = FALSE)
+coembed <- RunPCA(coembed, features = use_features, verbose = FALSE)
+coembed <- RunUMAP(coembed, dims = 1:30)
+embedding_filtered <- Embeddings(coembed, reduction = "pca")
+p <- DimPlot(coembed, group.by = c("orig.ident"))
+```
+```{r, include=FALSE, eval=FALSE}
+ggsave("data/coembed_filtered.jpeg")
+```
+```{r, echo=FALSE, out.width="500px"}
+knitr::include_graphics(system.file("extdata", "coembed_filtered.jpeg", package="CLIC"))
+```
+
+We see that the scRNA-seq and scATAC-seq cells are properly mixed in the latent space.
+
+## Further Reading
+
+For a more comprehensive benchmark as well as description of method, please see our paper:  
+PREPRINT LINK PENDING
+
+---
