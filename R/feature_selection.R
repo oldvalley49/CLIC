@@ -41,8 +41,8 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #' If a matrix is provided, it will be converted into a Seurat object internally.
 #'
 #' @param object A Seurat object or a gene expression counts matrix.
-#' @param species A character string specifying the species (used to load the corresponding CLIC score file).
-#'    Currently, "human" and "mouse" are supported.
+#' @param score_name A character string specifying the type of CLIC score used depending on species and gene activity computation.
+#'    Currently, "human_signac" and "mouse_signac" are supported.
 #' @param nfeatures Number of features to select, equivalent to `nfeatures` in Seurat's \code{FindVariableFeatures()}. 
 #'    Default is 2000.
 #' @param initial_variable_features_num Number of variable features to compute before applying CLIC selection. 
@@ -59,7 +59,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #'
 #' @examples
 #' \dontrun{
-#' out <- FindCLICFeatures(object = obj, species = "human")
+#' out <- FindCLICFeatures(object = obj, score_name = "human")
 #' use_features <- out$use_features
 #' }
 #'
@@ -70,7 +70,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #' @importClassesFrom Matrix Matrix
 #' 
 #' @export
-FindCLICFeatures <- function(object, species, nfeatures=2000, initial_variable_features_num=5000, verbose=TRUE) {
+FindCLICFeatures <- function(object, score_name, nfeatures=2000, initial_variable_features_num=5000, verbose=TRUE) {
 
    # check data properties
 
@@ -98,9 +98,9 @@ FindCLICFeatures <- function(object, species, nfeatures=2000, initial_variable_f
       warning('number of features in dataset were less than `initial_variable_features_num`')
    }
    
-   scores_fp <- system.file('extdata', paste0(species,'.csv'), package='CLIC')
+   scores_fp <- system.file('extdata', paste0(score_name,'.csv'), package='CLIC')
    if (!file.exists(scores_fp)){
-      stop('CLIC scores for the species are not currently available')
+      stop('CLIC scores with the name are not currently available')
    } else {
       # load CLIC scores here
       scores <- read.csv(scores_fp)

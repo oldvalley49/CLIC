@@ -6,7 +6,7 @@
 \usage{
 FindCLICFeatures(
   object,
-  species,
+  score_name,
   nfeatures = 2000,
   initial_variable_features_num = 5000,
   verbose = TRUE
@@ -15,8 +15,8 @@ FindCLICFeatures(
 \arguments{
 \item{object}{A Seurat object or a gene expression counts matrix.}
 
-\item{species}{A character string specifying the species (used to load the corresponding CLIC score file).
-Currently, "human" and "mouse" are supported.}
+\item{score_name}{A character string specifying the type of CLIC score used depending on species and gene activity computation.
+Currently, "human_signac" and "mouse_signac" are supported.}
 
 \item{nfeatures}{Number of features to select, equivalent to \code{nfeatures} in Seurat's \code{FindVariableFeatures()}.
 Default is 2000.}
@@ -29,7 +29,6 @@ A higher value gives more weight to the CLIC scores. Default is 5000.}
 \value{
 A list containing:
 \describe{
-\item{seurat_obj}{Seurat object containig gene expression data}
 \item{use_features}{Character vector of selected features.}
 \item{clic_num}{Integer indicating how many CLIC-ranked features were required to reach \code{nfeatures}.
 The intersection of the top \code{initial_variable_features_num} variable genes and the top \code{clic_num}
@@ -51,7 +50,7 @@ If a matrix is provided, it will be converted into a Seurat object internally.
 }
 \examples{
 \dontrun{
-out <- FindCLICFeatures(object = obj, species = "human")
+out <- FindCLICFeatures(object = obj, score_name = "human")
 use_features <- out$use_features
 }
 
