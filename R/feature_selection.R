@@ -42,7 +42,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #'
 #' @param object A Seurat object or a gene expression counts matrix.
 #' @param score_name A character string specifying the type of CLIC score used depending on species and gene activity computation.
-#'    Currently, "human_signac" and "mouse_signac" are supported.
+#'    Recommended scores for human is "human-signac-pearson". For mouse, using "mouse-signac-pearson" is recommended.
 #' @param nfeatures Number of features to select, equivalent to `nfeatures` in Seurat's \code{FindVariableFeatures()}. 
 #'    Default is 2000.
 #' @param initial_variable_features_num Number of variable features to compute before applying CLIC selection. 
