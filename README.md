@@ -26,7 +26,7 @@ devtools::install_github("oldvalley49/CLIC")
 ### User Manual
 
 Please view the vigentte for instructions on how to use the package:
-[Introduction to CLIC package](https://htmlpreview.github.io/?https://github.com/oldvalley49/CLIC/doc/Introduction.html)
+[Introduction to CLIC package](https://htmlpreview.github.io/?https://raw.githubusercontent.com/oldvalley49/CLIC/main/doc/Introduction.html)
 
 ### Citation
 (Pending)
