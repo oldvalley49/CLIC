@@ -440,7 +440,7 @@ integrating scRNA-seq and scATAC-seq data.</p>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                                        <span class="at">query.assay =</span> <span class="st">&quot;ACTIVITY&quot;</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                                        <span class="at">reduction =</span> <span class="st">&quot;cca&quot;</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># coembed into shared latent space</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>refdata <span class="ot">&lt;-</span> <span class="fu">GetAssayData</span>(rna, <span class="at">assay =</span> <span class="st">&quot;RNA&quot;</span>, <span class="at">slot =</span> <span class="st">&quot;data&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>refdata <span class="ot">&lt;-</span> <span class="fu">GetAssayData</span>(rna, <span class="at">assay =</span> <span class="st">&quot;RNA&quot;</span>, <span class="at">layer =</span> <span class="st">&quot;data&quot;</span>)</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>imputation <span class="ot">&lt;-</span> <span class="fu">TransferData</span>(<span class="at">anchorset =</span> transfer.anchors, <span class="at">refdata =</span> refdata, <span class="at">weight.reduction =</span> atac[[<span class="st">&quot;lsi&quot;</span>]],</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>                            <span class="at">dims =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>)</span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>atac[[<span class="st">&quot;RNA&quot;</span>]] <span class="ot">&lt;-</span> imputation</span>

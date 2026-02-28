@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 #                                         query.assay = "ACTIVITY",
 #                                         reduction = "cca")
 # # coembed into shared latent space
-# refdata <- GetAssayData(rna, assay = "RNA", slot = "data")
+# refdata <- GetAssayData(rna, assay = "RNA", layer = "data")
 # imputation <- TransferData(anchorset = transfer.anchors, refdata = refdata, weight.reduction = atac[["lsi"]],
 #                             dims = 2:30)
 # atac[["RNA"]] <- imputation
