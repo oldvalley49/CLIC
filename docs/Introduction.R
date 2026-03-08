@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 # 
 # # RNA preprocessing
 # rna <- NormalizeData(rna)
-# out <- FindCLICFeatures(rna, species='human-signac-pearson')
+# out <- FindCLICFeatures(rna, score_name='human-signac-pearson')
 # use_features <- out$use_features
 # head(use_features)
 # rna <- ScaleData(rna, features=use_features)
