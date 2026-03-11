@@ -46,7 +46,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #' @param nfeatures Number of features to select, equivalent to `nfeatures` in Seurat's \code{FindVariableFeatures()}. 
 #'    Default is 2000.
 #' @param initial_variable_features_num Number of variable features to compute before applying CLIC selection. 
-#'    A higher value gives more weight to the CLIC scores. Default is 5000.
+#'    A higher value gives more weight to the CLIC scores. Default is 6000.
 #' @param verbose Logical. Whether to print progress messages. Default is TRUE.
 #'
 #' @return A list containing:
@@ -70,7 +70,7 @@ intersect_until_n <- function(object, var_genes, CLIC_genes, n) {
 #' @importClassesFrom Matrix Matrix
 #' 
 #' @export
-FindCLICFeatures <- function(object, score_name, nfeatures=2000, initial_variable_features_num=5000, verbose=TRUE) {
+FindCLICFeatures <- function(object, score_name, nfeatures=2000, initial_variable_features_num=6000, verbose=TRUE) {
 
    # check data properties
 
