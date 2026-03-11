@@ -1,6 +1,8 @@
 # CLIC
 
 ![Project Status](http://www.repostatus.org/badges/latest/active.svg)
+[![DOI](https://zenodo.org/badge/965863451.svg)](https://doi.org/10.5281/zenodo.18966332)
+
 
 ### Overview
 
